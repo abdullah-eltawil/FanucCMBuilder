@@ -1,0 +1,294 @@
+﻿<Window x:Class="PayloadTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PayloadTool"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:System="clr-namespace:System;assembly=System.Runtime"
+        mc:Ignorable="d"
+        TextElement.FontFamily="Century Gothic"
+        TextElement.Foreground="White"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        Height="450" Width="800" MinHeight="450" MinWidth="950">
+
+    <Window.Resources>
+        <System:Double x:Key="TextBoxMinWidth">50</System:Double>
+        <System:Double x:Key="TitleBarHeight">30</System:Double>
+        <Thickness x:Key="TextBoxMargin" Left="10" Top="5" Right="10" Bottom="5" />
+
+        <Style x:Key="CloseButtonStyle" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0,9,0,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF960000"/>
+                    <Setter Property="BorderBrush" Value="#FF960000"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="MinMaxButtonStyle" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#111"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BuildButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF673AB7"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF940000"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LabelTextStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Border CornerRadius="10"
+            Background="#333"
+            Padding="0"
+            BorderThickness="1"
+            BorderBrush="#FF673AB7">
+
+        <DockPanel LastChildFill="True" >
+            <Grid DockPanel.Dock="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" 
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="4" 
+                        CornerRadius="9,9,0,0"
+                        Background="#555"
+                        Padding="0"
+                        BorderThickness="1"
+                        BorderBrush="#555"/>
+
+                <Image Grid.Row="0" 
+                       Grid.Column="0"  
+                       Width="{StaticResource TitleBarHeight}" 
+                       Height="{StaticResource TitleBarHeight}" 
+                       Source="/icons8-robot-48.png" Stretch="Fill"
+                       Margin="5,0,0,0"/>
+
+                <Menu Grid.Row="0" Grid.Column="1">
+                    <MenuItem Header="_File" Height="{StaticResource TitleBarHeight}">
+                        <MenuItem Header="_New" />
+                        <MenuItem Header="_Open" Click="ButtonOpen_Click"/>
+                        <MenuItem Header="_Save"/>
+                        <MenuItem Header="_Save As..." Click="ButtonSave_Click"/>
+                        <Separator />
+                        <MenuItem Header="_Exit" Click="MenuItemExit_Click"/>
+                    </MenuItem>
+                    <MenuItem Header="_Edit" Height="{StaticResource TitleBarHeight}">
+                        <MenuItem Header="_Undo" />
+                        <MenuItem Header="_Redo" />
+                        <Separator />
+                        <MenuItem Header="_Cut" />
+                        <MenuItem Header="_Copy" />
+                        <MenuItem Header="_Paste" />
+                    </MenuItem>
+                    <MenuItem Header="_Help" Height="{StaticResource TitleBarHeight}">
+                        <MenuItem Header="_About" />
+                    </MenuItem>
+                </Menu>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label>
+                        FANUC CM File Builder
+                    </Label>
+                    <Label Name="lblFilename" Padding="0,4"/>
+                </StackPanel>
+
+                <Rectangle Grid.Row="0" Grid.Column="2" MouseDown="DockPanel_MouseDown" Width="Auto" Height="Auto" Fill="Transparent"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="3">
+
+                    <Border Width="40"
+                            Style="{StaticResource MinMaxButtonStyle}"
+                            MouseLeftButtonDown="BorderMin_MouseLeftButtonDown"
+                            MouseLeftButtonUp="BorderMin_MouseLeftButtonUp">
+                        <materialDesign:PackIcon Kind="Minimize" 
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch"
+                                                 Width="20"
+                                                 Height="Auto"
+                                                 Foreground="White"/>
+                    </Border>
+                    <Border Width="40"
+                            Style="{StaticResource MinMaxButtonStyle}"
+                            MouseLeftButtonDown="BorderMax_MouseLeftButtonDown"
+                            MouseLeftButtonUp="BorderMax_MouseLeftButtonUp">
+                        <materialDesign:PackIcon Kind="Maximize"
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch"
+                                                 Width="20"
+                                                 Height="Auto"
+                                                 Foreground="White"/>
+                    </Border>
+                    <Border Name="btnClose"
+                            Width="40"
+                            Style="{StaticResource CloseButtonStyle}"
+                            MouseLeftButtonDown="BorderClose_MouseLeftButtonDown"
+                            MouseLeftButtonUp="BorderClose_MouseLeftButtonUp">
+                        <materialDesign:PackIcon Kind="Close"
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch"
+                                                 Width="20"
+                                                 Height="Auto"
+                                                 Foreground="White"/>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+
+
+            <Grid DockPanel.Dock="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="© 2023 Abdullah El Tawil" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Foreground="#444"/>
+                <Button Name="btnBuild"  Grid.Row="0" Grid.Column="2" Margin="10" Padding="0" VerticalAlignment="Bottom" Height="50" Click="ButtonBuild_Click">
+                    <materialDesign:PackIcon Kind="Hammer" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" />
+                </Button>
+            </Grid>
+
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Name" Grid.Row="1" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Weight (Kg)" Grid.Row="2" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Center of Gravity X (cm)" Grid.Row="3" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Center of Gravity Y (cm)" Grid.Row="4" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Center of Gravity Z (cm)" Grid.Row="5" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Intertia about X (Kgm^2)" Grid.Row="6" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Intertia about Y (Kgm^2)" Grid.Row="7" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+                <Label Content="Intertia about Z (Kgm^2)" Grid.Row="8" Grid.Column="0" Margin="{StaticResource TextBoxMargin}"/>
+
+                <Border Grid.Row="0" Grid.Column="1" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Foreground="Gold" FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl1Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="1" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl1Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl1InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="1" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <Border Grid.Row="0" Grid.Column="2" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="2" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Foreground="Gold" FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl2Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="2" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl2Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl2InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="2" Margin="{StaticResource TextBoxMargin}" TextAlignment="Right" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <Border Grid.Row="0" Grid.Column="3" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="3" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 3" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" Foreground="Gold" FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl3Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="3" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl3Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl3InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="3" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <Border Grid.Row="0" Grid.Column="4" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="4" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 4" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Foreground="Gold"  FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl4Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="4" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl4Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl4InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="4" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <Border Grid.Row="0" Grid.Column="5" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="5" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 5" Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" Foreground="Gold" FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl5Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="5" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl5Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl5InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="5" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <Border Grid.Row="0" Grid.Column="6" CornerRadius="5,5,0,0" Margin="1" Background="#FF673AB7" BorderThickness="2" BorderBrush="Gold"/>
+                <Border Grid.Row="0" Grid.Column="6" Grid.RowSpan="9" BorderThickness="2" BorderBrush="Gold" CornerRadius="5" Margin="1"/>
+                <Label Content="PAYLOAD 6" Grid.Row="0" Grid.Column="6" HorizontalAlignment="Center" Foreground="Gold" FontWeight="Bold" FontFamily="Century Gothic" Margin="5"/>
+
+                <TextBox Name="pl6Name" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="1" Grid.Column="6" Margin="{StaticResource TextBoxMargin}"/>
+                <TextBox Name="pl6Weight" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="2" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6CogX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="3" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6CogY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="4" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6CogZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="5" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6InX" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="6" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6InY" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="7" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+                <TextBox Name="pl6InZ" MinWidth="{DynamicResource TextBoxMinWidth}" Grid.Row="8" Grid.Column="6" Margin="{StaticResource TextBoxMargin}" PreviewTextInput="NumberValidationTextBox" DataObject.Pasting="TextBoxPasting"/>
+
+                <!--<TextBox Name="fileText" Margin="0,217,0,0" Height="200" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>-->
+            </Grid>
+        </DockPanel>
+    </Border>
+
+
+</Window>
